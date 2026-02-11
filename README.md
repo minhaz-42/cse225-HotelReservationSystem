@@ -7,7 +7,6 @@
 ![SQLite](https://img.shields.io/badge/Database-SQLite%20(sql.js)-blue)
 ![Ollama](https://img.shields.io/badge/LLM-Ollama%20(llama3)-purple)
 ![Tests](https://img.shields.io/badge/Tests-28%20passing-brightgreen)
-![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ---
 
