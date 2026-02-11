@@ -1,8 +1,8 @@
+#ifndef HRS_HPP
 #define HRS_HPP
 
 #include <iostream>
 #include <string>
-#include <conio.h>
 #include <fstream>
 #include <cstdlib>
 #include <algorithm>
@@ -62,3 +62,5 @@ public:
         }
     }
 };
+
+#endif

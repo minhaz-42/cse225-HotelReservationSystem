@@ -2,6 +2,7 @@
 #include <string>
 //#include <fstream>
 #include <cstdlib>
+#include <limits>
 #include <algorithm>
 #include <sstream>
 #include "Account.h"
@@ -9,6 +10,8 @@
 #include "Account_setting.h"
 #include "Sorted_roomprice.h"
 #include "ReservationSystem.h"
+
+#include "PlatformCompat.h"
 
 
 using namespace std;
@@ -38,28 +41,29 @@ void RoomReserve(){
 void Reservation(HotelReservationSystem& sys, const string& loggedInUsername) {
     char choice;
     do {
-        system("cls");
+        hrs_clear_screen();
         RoomReserve();
         cin >> choice;
         switch (choice) {
             case 'a':
                 sched(loggedInUsername); // Pass the loggedInUsername to sched
                 break;
-            case 'b':
-                char choice;
-                system("cls");
+            case 'b': {
+                char backChoice;
+                hrs_clear_screen();
                 displayRoomInformation();
                 while(true){
                     cout << "[a]Back: ";
-                    cin >> choice;
-                    if(choice == 'a'){
+                    cin >> backChoice;
+                    if(backChoice == 'a'){
                         break;
                     } else{
                         cout << "Invalid. Try again." << endl;
                     }
                 }
                 break;
-            case 'c':
+            }
+            case 'c': {
                 int chosenMonth, chosenFromDate;
                 cout << "Enter the month number (1-12): ";
                 cin >> chosenMonth;
@@ -76,8 +80,9 @@ void Reservation(HotelReservationSystem& sys, const string& loggedInUsername) {
                         cout << "Invalid. Try again." << endl;
                     }
                 }
-                system("pause");
+                hrs_pause();
                 break;
+            }
             case 'd':
                 return;
             case 'e':
@@ -96,7 +101,7 @@ void AdminMenu(HotelReservationSystem& sys) {
 void ClientMenu(HotelReservationSystem& sys, const string& loggedInUsername) {
     char choice;
     do {
-        system("cls");
+        hrs_clear_screen();
         displayClientMenu();
         cin >> choice;
 
@@ -129,7 +134,7 @@ void ClientMenu(HotelReservationSystem& sys, const string& loggedInUsername) {
 // Function to login
 void showLoginPage(HotelReservationSystem& sys) {
     Account account;
-    system("cls");
+    hrs_clear_screen();
     cout << "Login System" << endl;
     char choice;
     cout << "[a] Register" << endl;
@@ -172,7 +177,7 @@ void showLoginPage(HotelReservationSystem& sys) {
 
     // Clear the input buffer
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    system("pause");
+    hrs_pause();
 }
 
 int main() {

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Assistant — Grand Hotel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="bg-particles"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/dashboard.html" class="navbar-brand">✦ Grand Hotel</a>
+      <div class="navbar-links">
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/booking.html">Book a Room</a>
+        <button onclick="Auth.logout()" class="nav-btn-logout">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <h1 class="chat-title">🤖 AI Chat Assistant</h1>
+      <p class="chat-subtitle">Ask about rooms, availability, pricing, or say <em>"Book a suite for 2 on April 5-8"</em>.</p>
+    </div>
+
+    <!-- Chat Messages -->
+    <div id="chat-messages" class="chat-messages-box">
+      <div class="text-center chat-empty">
+        <div class="chat-empty-icon">💬</div>
+        <p>Start a conversation with our AI concierge…</p>
+      </div>
+    </div>
+
+    <!-- VLM Upload -->
+    <div class="vlm-section">
+      <details>
+        <summary>📷 Upload a room image for VLM analysis</summary>
+        <div class="vlm-inner">
+          <input id="image-input" type="file" accept="image/*" />
+          <button onclick="analyseImage()" class="btn-primary btn-sm">Analyse</button>
+        </div>
+      </details>
+    </div>
+
+    <!-- Input -->
+    <form id="chat-form" class="chat-input-row">
+      <input id="chat-input" type="text" class="form-input" placeholder="Type your message…" autocomplete="off" />
+      <button type="submit" class="btn-primary">Send</button>
+    </form>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+</html>

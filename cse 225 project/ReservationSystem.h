@@ -1,3 +1,4 @@
+#ifndef RESERVATIONSYSTEM_HPP
 #define RESERVATIONSYSTEM_HPP
 
 #include <iostream>
@@ -9,6 +10,8 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+
+#include "PlatformCompat.h"
 
 using namespace std;
 
@@ -191,7 +194,7 @@ void Roomreserve(int chosenMonth, int chosenFromDate, int chosenToDate, const st
         cout << "\nRoom reserved successfully. Reference number: " << referenceNumber << endl;
         cout << "Total amount: PHP " << totalAmount << ".00" << endl;
         
-        system("pause");
+        hrs_pause();
 
     } else {
         cout << "Sorry, no rooms of this type are available.\n";
@@ -349,7 +352,7 @@ void deleteReservation() {
 void Display_reservation_admin() {
     string display_opt;
     do{
-    system("cls");
+    hrs_clear_screen();
     cout << "=== Manage Reservation Schedule ===" << endl << endl;
     
     if(reservations.size() == 0) {
@@ -376,14 +379,14 @@ void Display_reservation_admin() {
     switch (display_opt[0]) {
         case 'A':
             confirmSelectedReservation();
-            system("pause");
+            hrs_pause();
             break;
         case 'B':
             deleteReservation();
-            system("pause");
+            hrs_pause();
             break;
-        case 'C':
-                char choice;
+        case 'C': {
+                char backChoice;
                 int chosenMonth, chosenFromDate;
                 cout << "Enter the month number (1-12): ";
                 cin >> chosenMonth;
@@ -393,15 +396,16 @@ void Display_reservation_admin() {
                 while(true){
                     cout << endl;
                     cout << "[a]Back: ";
-                    cin >> choice;
-                    if(choice == 'a'){
+                    cin >> backChoice;
+                    if(backChoice == 'a'){
                         break;
                     } else{
                         cout << "Invalid. Try again." << endl;
                     }
                 }
-                system("pause");
+                hrs_pause();
                 break;
+        }
         case 'D':
             cout << "Logging out..." << endl;
             break;
@@ -415,7 +419,7 @@ void Display_reservation_admin() {
 }
 
 void Display_reservation_client(const string& loggedInUsername) {
-    system("cls");
+    hrs_clear_screen();
     cout << "\nMY RESERVATIONS:\n";
     int reservationCount = 0;
 
@@ -445,7 +449,7 @@ void Display_reservation_client(const string& loggedInUsername) {
     switch (display_opt[0]) {
         case 'A':
             deleteReservation();
-            system("pause");
+            hrs_pause();
             break;
         case 'B':
             return;
@@ -505,7 +509,7 @@ void sched(const string& loggedInUsername) {
         }
     }
     
-    system("cls");
+    hrs_clear_screen();
     
     cout << "\nROOM AVAILABILITY on " << calendar.getMonthName(chosenMonth) << " " << chosenFromDate << ":\n";
     cout << "Room Type\tAvailable Rooms\n";
@@ -552,3 +556,5 @@ vector<RoomType> getAvailableRooms(int chosenMonth, int chosenFromDate) {
 
     return availableRooms;
 }
+
+#endif

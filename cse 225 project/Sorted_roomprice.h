@@ -1,3 +1,4 @@
+#ifndef SORTED_ROOMPRICE_HPP
 #define SORTED_ROOMPRICE_HPP
 
 #include <iostream>
@@ -95,4 +96,6 @@ void displayRoomInformation() {
         std::cout << std::endl;
     }
 }
+
+#endif
 

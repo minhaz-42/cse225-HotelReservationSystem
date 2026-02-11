@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — Grand Hotel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="bg-particles"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-admin">
+    <div class="navbar-inner">
+      <a href="/admin.html" class="navbar-brand navbar-brand-admin">✦ Admin Panel</a>
+      <div class="navbar-links">
+        <a href="/chat-assistant.html">AI Analytics</a>
+        <button onclick="Auth.logout()" class="nav-btn-logout">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-container">
+    <h1 class="page-title">Admin Dashboard</h1>
+
+    <!-- Stats -->
+    <div class="grid-4 mb-40">
+      <div class="stat-card animate-in">
+        <div class="stat-icon">📊</div>
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-label">Total Bookings</div>
+      </div>
+      <div class="stat-card animate-in">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-value" id="stat-pending">—</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-card animate-in">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value" id="stat-confirmed">—</div>
+        <div class="stat-label">Confirmed</div>
+      </div>
+      <div class="stat-card animate-in">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value" id="stat-revenue">—</div>
+        <div class="stat-label">Revenue</div>
+      </div>
+    </div>
+
+    <!-- AI Report -->
+    <div class="ai-section animate-in">
+      <h2>🤖 AI Analytics Report</h2>
+      <p>Ask the AI to generate reports, summaries, and insights from your reservation data.</p>
+      <div class="ai-input-row">
+        <input id="report-prompt" type="text" class="form-input" placeholder="e.g. Summarize this month's reservations and trends" />
+        <button id="report-btn" onclick="generateReport()" class="btn-primary btn-sm">Generate</button>
+      </div>
+      <pre id="report-output" class="hidden report-output"></pre>
+    </div>
+
+    <!-- Reservations Table -->
+    <div class="glass-card card-section">
+      <div class="section-header">
+        <h2 class="card-title-inline">All Reservations</h2>
+        <div>
+          <label for="status-filter" class="sr-only">Filter</label>
+          <select id="status-filter" onchange="loadReservations()" class="form-input filter-select">
+            <option value="">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ref #</th>
+              <th>User</th>
+              <th>Room</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="admin-res-body">
+            <tr><td colspan="8" class="text-center table-loading"><div class="loading"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Revenue by Room -->
+    <div class="glass-card card-padded">
+      <h2 class="card-title">Revenue by Room Type</h2>
+      <div id="revenue-bars" class="text-muted">
+        <div class="loading"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

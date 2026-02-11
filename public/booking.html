@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Room — Grand Hotel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="bg-particles"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/dashboard.html" class="navbar-brand">✦ Grand Hotel</a>
+      <div class="navbar-links">
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/chat-assistant.html">AI Assistant</a>
+        <button onclick="Auth.logout()" class="nav-btn-logout">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-container">
+    <h1 class="page-title">Book a Room</h1>
+
+    <!-- AI Quick Book -->
+    <div class="ai-section animate-in">
+      <h2>🤖 AI Quick Book</h2>
+      <p>Describe your ideal stay in natural language and AI will fill in the booking form for you.</p>
+      <div class="ai-input-row">
+        <input id="ai-input" type="text" class="form-input" placeholder='e.g. "Deluxe room for 2 guests, March 10-15"' />
+        <button id="ai-btn" onclick="aiParse()" class="btn-primary btn-sm">Parse with AI</button>
+      </div>
+      <p id="ai-status" class="hidden ai-status-text"></p>
+    </div>
+
+    <div class="booking-layout">
+      <!-- Booking Form -->
+      <div>
+        <div class="glass-card card-padded">
+          <h2 class="card-title">Reservation Details</h2>
+
+          <div id="book-error" class="alert alert-error"></div>
+          <div id="book-success" class="alert alert-success"></div>
+
+          <form id="book-form">
+            <div class="form-group">
+              <label for="room-select" class="form-label">Room Type</label>
+              <select id="room-select" required class="form-input">
+                <option value="">Loading…</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="check-in" class="form-label">Check-in Date</label>
+              <input id="check-in" type="date" required class="form-input" />
+            </div>
+            <div class="form-group">
+              <label for="check-out" class="form-label">Check-out Date</label>
+              <input id="check-out" type="date" required class="form-input" />
+            </div>
+            <div class="form-group">
+              <label for="guests" class="form-label">Number of Guests</label>
+              <input id="guests" type="number" min="1" value="1" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label for="notes" class="form-label">Special Requests</label>
+              <textarea id="notes" rows="2" class="form-input" placeholder="Any special requests..."></textarea>
+            </div>
+
+            <div id="avail-badge" class="hidden avail-badge"></div>
+
+            <button type="submit" class="btn-primary btn-block">
+              Book Now →
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Room Cards -->
+      <div>
+        <div class="section-header">
+          <h2 class="card-title-inline">Available Rooms</h2>
+        </div>
+        <div class="sort-pills">
+          <button onclick="sortRooms('price_per_night','ASC')" class="sort-pill">Price ↑</button>
+          <button onclick="sortRooms('price_per_night','DESC')" class="sort-pill">Price ↓</button>
+          <button onclick="sortRooms('rating','DESC')" class="sort-pill">Rating ↓</button>
+          <button onclick="sortRooms('capacity','DESC')" class="sort-pill">Capacity ↓</button>
+        </div>
+        <div id="room-list" class="room-grid room-grid-single">
+          <div class="text-center room-loading">
+            <div class="loading"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/booking.js"></script>
+</body>
+</html>

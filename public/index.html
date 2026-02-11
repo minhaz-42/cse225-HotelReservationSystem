@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grand Hotel — AI-Powered Luxury Reservations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="bg-particles"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/" class="navbar-brand">✦ Grand Hotel</a>
+      <div class="navbar-links" id="nav-links">
+        <a href="/login.html">Login</a>
+        <a href="/register.html" class="btn-primary btn-sm">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Experience Intelligent<br>Hospitality</h1>
+    <p>Book rooms with natural language, get AI-powered recommendations, and enjoy dynamic pricing — all from one stunning modern platform.</p>
+    <div class="hero-buttons">
+      <a href="/register.html" class="btn-primary">Get Started →</a>
+      <a href="#rooms" class="btn-secondary">Explore Rooms</a>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section-features">
+    <h2 class="section-heading">Why Choose Grand Hotel?</h2>
+    <div class="features-grid">
+      <div class="feature-card animate-in">
+        <span class="feature-icon">🤖</span>
+        <h3>AI Booking Assistant</h3>
+        <p>Describe your ideal stay in plain English and our LLM will handle the rest — parsing dates, room types and preferences.</p>
+      </div>
+      <div class="feature-card animate-in">
+        <span class="feature-icon">📊</span>
+        <h3>Dynamic Pricing</h3>
+        <p>Demand-based pricing ensures fair rates. High-demand periods adjust naturally, giving you transparency and value.</p>
+      </div>
+      <div class="feature-card animate-in">
+        <span class="feature-icon">🔐</span>
+        <h3>Secure & Modern</h3>
+        <p>JWT authentication, bcrypt hashing, role-based access control, and rate-limited APIs protect every interaction.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rooms Preview -->
+  <section id="rooms" class="section-rooms">
+    <h2 class="section-heading">Our Luxury Rooms</h2>
+    <div id="room-cards" class="room-grid room-grid-container">
+      <div class="text-center grid-full-span room-loading">
+        <div class="loading"></div>
+        <p class="mt-12">Loading rooms…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2026 Grand Hotel Reservation System — CSE 225 Research Prototype</p>
+    <p class="footer-sub">Built with Express.js, SQLite, Ollama AI & Modern Web Technologies</p>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script>
+    // Update nav if logged in
+    (function() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const user = JSON.parse(localStorage.getItem('user'));
+          const links = document.getElementById('nav-links');
+          links.innerHTML = `
+            <a href="${user && user.role === 'admin' ? '/admin.html' : '/dashboard.html'}">Dashboard</a>
+            <a href="/booking.html">Book</a>
+            <a href="/chat-assistant.html">AI Chat</a>
+          `;
+        } catch(e) {}
+      }
+    })();
+
+    // Room type to class mapping
+    function getRoomClass(name) {
+      const n = name.toLowerCase();
+      if (n.includes('standard'))  return 'room-standard';
+      if (n.includes('deluxe'))    return 'room-deluxe';
+      if (n.includes('suite'))     return 'room-suite';
+      if (n.includes('executive')) return 'room-executive';
+      if (n.includes('penthouse')) return 'room-penthouse';
+      return 'room-default';
+    }
+
+    function getRoomEmoji(name) {
+      const n = name.toLowerCase();
+      if (n.includes('standard'))  return '🛏️';
+      if (n.includes('deluxe'))    return '🌟';
+      if (n.includes('suite'))     return '🏠';
+      if (n.includes('executive')) return '💼';
+      if (n.includes('penthouse')) return '👑';
+      return '🏨';
+    }
+
+    (async () => {
+      try {
+        const rooms = await API.get('/api/rooms?sortBy=price_per_night&order=ASC');
+        const container = document.getElementById('room-cards');
+        if (!rooms.length) {
+          container.innerHTML = '<p class="text-center grid-full-span text-muted">No rooms available.</p>';
+          return;
+        }
+        container.innerHTML = rooms.map(r => `
+          <div class="room-card animate-in">
+            <div class="room-card-image ${getRoomClass(r.name)}">
+              <span>${getRoomEmoji(r.name)}</span>
+            </div>
+            <div class="room-card-body">
+              <h3>${r.name}</h3>
+              <p class="room-desc">${r.description}</p>
+              <div class="room-meta">
+                <span class="room-price">₱${r.price_per_night.toLocaleString()}/night</span>
+                <span class="room-rating">⭐ ${r.rating}</span>
+              </div>
+              <p class="room-info">Capacity: ${r.capacity} guests · ${r.total_rooms} rooms available</p>
+            </div>
+          </div>
+        `).join('');
+      } catch(e) {
+        document.getElementById('room-cards').innerHTML = '<p class="text-center grid-full-span text-muted">Unable to load rooms. Start the server first.</p>';
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,12 +1,16 @@
+#ifndef ACCOUNT_HPP
 #define ACCOUNT_HPP
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cstdlib>
+#include <cctype>
 #include <algorithm>
 #include <sstream>
-//#include <conio.h>
+#include <vector>
+
+#include "PlatformCompat.h"
 using namespace std;
 
 class Account {
@@ -16,6 +20,25 @@ private:
     string name;
     string email;
     string contactNumber;
+
+    static vector<string> splitCSV(const string& line) {
+        vector<string> parts;
+        string token;
+        stringstream ss(line);
+        while (getline(ss, token, ',')) {
+            parts.push_back(token);
+        }
+        return parts;
+    }
+
+    static string joinCSV(const vector<string>& parts) {
+        string out;
+        for (size_t i = 0; i < parts.size(); i++) {
+            if (i) out += ",";
+            out += parts[i];
+        }
+        return out;
+    }
 
     string encryptPassword(const string& password) {
         string encryptedPassword = password;
@@ -74,8 +97,8 @@ public:
     }
 
     void registerUser() {
-        system("pause");
-        system("cls");
+        hrs_pause();
+        hrs_clear_screen();
         cout << "=== Register ===" << endl;
         cout << "Enter name: ";
         cin.ignore();
@@ -141,8 +164,10 @@ public:
         string input;
         char ch;
             
-        while ((ch = _getch()) != '\r') {
-            if (ch == '\b') {
+        while (true) {
+            ch = static_cast<char>(hrs_getch());
+            if (ch == '\r' || ch == '\n') break;
+            if (ch == '\b' || ch == 127) {
                 if (!input.empty()) {
                     input.pop_back();
                     cout << "\b \b";
@@ -157,7 +182,7 @@ public:
     }
 
     string loginUser() {
-        system("cls");
+        hrs_clear_screen();
         cout << "=== Log In ===" << endl;
         cout << "Enter username: ";
         cin >> username;
@@ -214,17 +239,17 @@ public:
 
         // Process each line in the file
         while (getline(file, line)) {
-            size_t commaPos = line.find(',');
-            string storedUsername = line.substr(0, commaPos);
-            string storedPassword = line.substr(commaPos + 1, line.find(',', commaPos + 1) - commaPos - 1);
+            vector<string> parts = splitCSV(line);
+            if (parts.size() < 5) {
+                newFileContents << line << endl;
+                continue;
+            }
 
-            if (storedUsername == username && storedPassword == encryptPassword(currentPassword)) {
-                // Found the line with the user's credentials and the correct current password,
-                // update the password with the new password
-                newFileContents << username << "," << encryptPassword(newPassword) << line.substr(commaPos) << endl;
+            if (parts[0] == username && parts[1] == encryptPassword(currentPassword)) {
+                parts[1] = encryptPassword(newPassword);
+                newFileContents << joinCSV(parts) << endl;
                 cout << "Password changed successfully." << endl;
             } else {
-                // Keep the line unchanged
                 newFileContents << line << endl;
             }
         }
@@ -235,6 +260,10 @@ public:
     }
 
     void updateEmail(const string& username, const string& currentPassword, const string& newEmail) {
+        if (!isValidEmail(newEmail)) {
+            cout << "Invalid email format." << endl;
+            return;
+        }
         if (!isCurrentPasswordValid(username, currentPassword)) {
             cout << "Incorrect current password." << endl;
             return;
@@ -247,17 +276,17 @@ public:
 
         // Process each line in the file
         while (getline(file, line)) {
-            size_t commaPos = line.find(',');
-            string storedUsername = line.substr(0, commaPos);
-            string storedPassword = line.substr(commaPos + 1, line.find(',', commaPos + 1) - commaPos - 1);
+            vector<string> parts = splitCSV(line);
+            if (parts.size() < 5) {
+                newFileContents << line << endl;
+                continue;
+            }
 
-            if (storedUsername == username && storedPassword == encryptPassword(currentPassword)) {
-                // Found the line with the user's credentials and the correct current password,
-                // update the email with the new email
-                newFileContents << username << "," << storedPassword << "," << name << "," << newEmail << "," << contactNumber << endl;
+            if (parts[0] == username && parts[1] == encryptPassword(currentPassword)) {
+                parts[3] = newEmail;
+                newFileContents << joinCSV(parts) << endl;
                 cout << "Email updated successfully." << endl;
             } else {
-                // Keep the line unchanged
                 newFileContents << line << endl;
             }
         }
@@ -268,6 +297,16 @@ public:
     }
 
     void updateContactNumber(const string& username, const string& currentPassword, const string& newContactNumber) {
+        if (newContactNumber.length() != 11) {
+            cout << "Invalid contact number. Please enter an 11-digit number." << endl;
+            return;
+        }
+        for (char c : newContactNumber) {
+            if (!isdigit(static_cast<unsigned char>(c))) {
+                cout << "Invalid contact number. Please enter an 11-digit number." << endl;
+                return;
+            }
+        }
         if (!isCurrentPasswordValid(username, currentPassword)) {
             cout << "Incorrect current password." << endl;
             return;
@@ -280,17 +319,17 @@ public:
 
         // Process each line in the file
         while (getline(file, line)) {
-            size_t commaPos = line.find(',');
-            string storedUsername = line.substr(0, commaPos);
-            string storedPassword = line.substr(commaPos + 1, line.find(',', commaPos + 1) - commaPos - 1);
+            vector<string> parts = splitCSV(line);
+            if (parts.size() < 5) {
+                newFileContents << line << endl;
+                continue;
+            }
 
-            if (storedUsername == username && storedPassword == encryptPassword(currentPassword)) {
-                // Found the line with the user's credentials and the correct current password,
-                // update the contact number with the new contact number
-                newFileContents << username << "," << storedPassword << "," << name << "," << email << "," << newContactNumber << endl;
+            if (parts[0] == username && parts[1] == encryptPassword(currentPassword)) {
+                parts[4] = newContactNumber;
+                newFileContents << joinCSV(parts) << endl;
                 cout << "Contact number updated successfully." << endl;
             } else {
-                // Keep the line unchanged
                 newFileContents << line << endl;
             }
         }
@@ -303,13 +342,12 @@ public:
         ifstream file("credentials");
         string line;
         while (getline(file, line)) {
-            size_t commaPos = line.find(',');
-            string storedUsername = line.substr(0, commaPos);
-            if (storedUsername == username) {
-                string storedPassword = line.substr(commaPos + 1, line.find(',', commaPos + 1) - commaPos - 1);
-                string storedName = line.substr(line.find(',', commaPos + 1) + 1, line.find(',', line.find(',', commaPos + 1) + 1) - line.find(',', commaPos + 1) - 1);
-                string storedEmail = line.substr(line.find(',', line.find(',', commaPos + 1) + 1) + 1, line.find(',', line.find(',', line.find(',', commaPos + 1) + 1) + 1) - line.find(',', line.find(',', commaPos + 1) + 1) - 1);
-                string storedContactNumber = line.substr(line.find(',', line.find(',', line.find(',', commaPos + 1) + 1) + 1) + 1);
+            vector<string> parts = splitCSV(line);
+            if (parts.size() < 5) continue;
+            if (parts[0] == username) {
+                const string& storedName = parts[2];
+                const string& storedEmail = parts[3];
+                const string& storedContactNumber = parts[4];
                 cout << "=== User Info ===" << endl << endl;
                 cout << "Username: " << username << endl;
                 cout << "Name: " << storedName << endl;
@@ -326,4 +364,6 @@ public:
     
 
 };
+
+#endif
 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Grand Hotel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <div class="bg-particles"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="/dashboard.html" class="navbar-brand">✦ Grand Hotel</a>
+      <div class="navbar-links">
+        <a href="/booking.html">Book a Room</a>
+        <a href="/chat-assistant.html">AI Assistant</a>
+        <span id="user-greeting" class="user-greeting"></span>
+        <button onclick="Auth.logout()" class="nav-btn-logout">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-container">
+    <h1 class="page-title">My Dashboard</h1>
+
+    <!-- Quick Actions -->
+    <div class="grid-3 mb-40">
+      <a href="/booking.html" class="action-card animate-in">
+        <span class="action-icon">📅</span>
+        <span class="action-label">Book a Room</span>
+        <span class="action-sub">Browse rooms & reserve</span>
+      </a>
+      <a href="/chat-assistant.html" class="action-card animate-in">
+        <span class="action-icon">🤖</span>
+        <span class="action-label">AI Assistant</span>
+        <span class="action-sub">Chat with our AI concierge</span>
+      </a>
+      <div class="action-card animate-in">
+        <span class="action-icon">📋</span>
+        <span class="action-label">My Reservations</span>
+        <span class="action-sub">Total: <strong id="res-count" class="text-primary-light">—</strong></span>
+      </div>
+    </div>
+
+    <!-- Reservations Table -->
+    <div class="glass-card card-section">
+      <h2 class="card-title">My Reservations</h2>
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ref #</th>
+              <th>Room</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="reservations-body">
+            <tr><td colspan="7" class="text-center table-loading"><div class="loading"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="glass-card card-padded">
+      <h2 class="card-title">My Profile</h2>
+      <div id="profile-info" class="profile-card text-muted">
+        <div class="loading"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
